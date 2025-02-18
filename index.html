@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Runda hörn på bilder</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body { 
+            background-color: #6431ac; 
+        }
+        .result-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .result-image-container {
+            display: inline-block;
+            padding: 5px;
+            transition: transform 0.3s ease;
+        }
+        .result-image-container:hover {
+            transform: scale(1.02);
+        }
+        .result-image {
+            max-width: 100%;
+            max-height: 500px;
+            object-fit: contain;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 5px;
+        }
+        .custom-file-upload {
+            border: 1px solid #ccc;
+            display: inline-block;
+            padding: 6px 12px;
+            cursor: pointer;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.9);
+        }
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .close:hover,
+        .close:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        #radiusSlider {
+            flex-grow: 1;
+        }
+        #radius {
+            width: 60px;
+        }
+        #results {
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 0 15px;
+        }
+        .content-box {
+            background-color: #f5f4f0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="content-box">
+            <h1 class="text-center mb-4">Runda hörn på bilder</h1>
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <form id="uploadForm" class="mb-4">
+                        <div class="mb-3">
+                            <label for="imageInput" class="custom-file-upload">
+                                <i class="fas fa-cloud-upload-alt"></i> Välj bilder
+                            </label>
+                            <input type="file" id="imageInput" accept="image/*" multiple required style="display: none;">
+                        </div>
+                        <div class="mb-3 slider-container">
+                            <label for="radiusSlider" class="form-label">Hörnradie:</label>
+                            <input type="range" class="form-range" id="radiusSlider" min="0" max="100" value="30">
+                            <input type="number" id="radius" name="radius" value="30" min="0" max="100" required class="form-control">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content-box">
+            <h2 class="text-center mb-3">Resultat</h2>
+            <div id="results"></div>
+        </div>
+    </div>
+
+    <div id="imageModal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function openModal(src) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            modal.style.display = "flex";
+            modal.style.alignItems = "center";
+            modal.style.justifyContent = "center";
+            modalImg.src = src;
+            
+            modalImg.onload = function() {
+                const aspectRatio = this.naturalWidth / this.naturalHeight;
+                const maxWidth = window.innerWidth * 0.9;
+                const maxHeight = window.innerHeight * 0.9;
+                
+                if (aspectRatio > maxWidth / maxHeight) {
+                    this.style.width = maxWidth + 'px';
+                    this.style.height = 'auto';
+                } else {
+                    this.style.height = maxHeight + 'px';
+                    this.style.width = 'auto';
+                }
+            }
+        }
+
+        const span = document.getElementsByClassName("close")[0];
+        span.onclick = function() { 
+            document.getElementById('imageModal').style.display = "none";
+        }
+
+        function updateRadius(value) {
+            document.getElementById('radius').value = value;
+            document.getElementById('radiusSlider').value = value;
+            if (document.getElementById('imageInput').files.length > 0) {
+                processImages();
+            }
+        }
+
+        document.getElementById('radiusSlider').addEventListener('input', function() {
+            updateRadius(this.value);
+        });
+
+        document.getElementById('radius').addEventListener('input', function() {
+            updateRadius(this.value);
+        });
+
+        function processImages() {
+            const files = document.getElementById('imageInput').files;
+            const radius = parseInt(document.getElementById('radius').value);
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
+            const resultContainer = document.createElement('div');
+            resultContainer.className = 'result-container';
+            resultsDiv.appendChild(resultContainer);
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+
+                        ctx.beginPath();
+                        ctx.moveTo(radius, 0);
+                        ctx.lineTo(canvas.width - radius, 0);
+                        ctx.quadraticCurveTo(canvas.width, 0, canvas.width, radius);
+                        ctx.lineTo(canvas.width, canvas.height - radius);
+                        ctx.quadraticCurveTo(canvas.width, canvas.height, canvas.width - radius, canvas.height);
+                        ctx.lineTo(radius, canvas.height);
+                        ctx.quadraticCurveTo(0, canvas.height, 0, canvas.height - radius);
+                        ctx.lineTo(0, radius);
+                        ctx.quadraticCurveTo(0, 0, radius, 0);
+                        ctx.closePath();
+                        ctx.clip();
+
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                        const imgContainer = document.createElement('div');
+                        imgContainer.className = 'mb-3 text-center result-image-container';
+                        
+                        const resultImg = document.createElement('img');
+                        resultImg.src = canvas.toDataURL();
+                        resultImg.className = 'result-image fade-in mb-2';
+                        resultImg.onclick = function() {
+                            openModal(this.src);
+                        };
+                        
+                        const downloadLink = document.createElement('a');
+                        downloadLink.href = canvas.toDataURL('image/png');
+                        downloadLink.download = `rounded_${file.name}`;
+                        downloadLink.className = 'btn btn-primary';
+                        downloadLink.innerHTML = '<i class="fas fa-download"></i> Ladda ner';
+                        
+                        imgContainer.appendChild(resultImg);
+                        imgContainer.appendChild(document.createElement('br'));
+                        imgContainer.appendChild(downloadLink);
+                        resultContainer.appendChild(imgContainer);
+                    }
+                    img.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        document.getElementById('imageInput').addEventListener('change', function() {
+            if (this.files.length > 0) {
+                processImages();
+            }
+        });
+    </script>
+</body>
+</html>
