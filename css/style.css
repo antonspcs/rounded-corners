@@ -29,32 +29,38 @@ body {
     border-radius: var(--border-radius);
     box-shadow: 0 4px 20px rgba(68, 23, 116, 0.1);
     overflow: hidden;
+    max-height: calc(100vh - 4rem);
+    margin: 2rem 0;
 }
 
 .editor-layout {
     display: grid;
     grid-template-columns: 1fr 300px;
-    min-height: 600px;
+    height: calc(100vh - 4rem);
+    max-height: 800px;
 }
 
 /* Preview Panel */
 .preview-panel {
     background: var(--secondary-color);
-    padding: 2rem;
+    padding: 1.5rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
+    position: relative;
 }
 
 /* Controls Panel */
 .controls-panel {
     background: var(--panel-bg);
-    padding: 2rem;
+    padding: 1.5rem;
     border-left: 1px solid rgba(68, 23, 116, 0.1);
     display: flex;
     flex-direction: column;
     gap: var(--control-spacing);
+    overflow-y: auto;
 }
 
 .app-title {
@@ -98,6 +104,8 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    position: absolute;
+    z-index: 1;
 }
 
 #drop-area.highlight {
@@ -113,11 +121,26 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
+    position: relative;
 }
 
 #cropperImage {
     max-width: 100%;
     max-height: 100%;
+}
+
+/* Make sure the cropper stays within bounds */
+.cropper-container {
+    max-height: 100% !important;
+}
+
+.cropper-wrap-box {
+    max-height: 100% !important;
+}
+
+.cropper-canvas, .cropper-drag-box {
+    max-height: 100% !important;
 }
 
 /* Custom file input */
@@ -218,7 +241,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
     background: var(--panel-bg);
     border-radius: var(--border-radius);
     padding: 2rem;
-    margin-top: 2rem;
+    margin-top: calc(2rem + 20px);
     box-shadow: 0 4px 20px rgba(68, 23, 116, 0.1);
 }
 
@@ -293,17 +316,32 @@ input[type="range"]::-webkit-slider-thumb:hover {
 @media (max-width: 992px) {
     .editor-layout {
         grid-template-columns: 1fr;
+        height: auto;
+        max-height: none;
+    }
+
+    .preview-panel {
+        height: 60vh;
+        min-height: 400px;
     }
 
     .controls-panel {
         border-left: none;
         border-top: 1px solid rgba(68, 23, 116, 0.1);
+        max-height: 40vh;
+        overflow-y: auto;
     }
 }
 
 @media (max-width: 768px) {
-    .container-fluid {
-        padding: 1rem;
+    .editor-container {
+        margin: 1rem 0;
+        max-height: none;
+    }
+
+    .preview-panel {
+        height: 50vh;
+        min-height: 300px;
     }
     
     .preview-panel, .controls-panel {
