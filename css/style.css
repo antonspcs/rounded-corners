@@ -29,15 +29,14 @@ body {
     border-radius: var(--border-radius);
     box-shadow: 0 4px 20px rgba(68, 23, 116, 0.1);
     overflow: hidden;
-    max-height: calc(100vh - 4rem);
     margin: 2rem 0;
 }
 
 .editor-layout {
     display: grid;
     grid-template-columns: 1fr 300px;
-    height: calc(100vh - 4rem);
-    max-height: 800px;
+    min-height: 500px;
+    max-height: 500px;
 }
 
 /* Preview Panel */
@@ -50,6 +49,7 @@ body {
     justify-content: center;
     overflow: hidden;
     position: relative;
+    height: 500px;
 }
 
 /* Controls Panel */
@@ -61,6 +61,7 @@ body {
     flex-direction: column;
     gap: var(--control-spacing);
     overflow-y: auto;
+    height: 500px;
 }
 
 .app-title {
@@ -128,19 +129,41 @@ body {
 #cropperImage {
     max-width: 100%;
     max-height: 100%;
+    object-fit: contain;
 }
 
 /* Make sure the cropper stays within bounds */
 .cropper-container {
+    max-width: 100% !important;
     max-height: 100% !important;
 }
 
 .cropper-wrap-box {
+    max-width: 100% !important;
     max-height: 100% !important;
 }
 
-.cropper-canvas, .cropper-drag-box {
+.cropper-canvas {
+    max-width: 100% !important;
     max-height: 100% !important;
+}
+
+.cropper-view-box {
+    max-width: 100% !important;
+    max-height: 100% !important;
+}
+
+.cropper-face {
+    max-width: 100% !important;
+    max-height: 100% !important;
+}
+
+/* Override Cropper.js default styles to ensure image fits */
+.cropper-container img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain !important;
+    display: block;
 }
 
 /* Custom file input */
@@ -321,27 +344,25 @@ input[type="range"]::-webkit-slider-thumb:hover {
     }
 
     .preview-panel {
-        height: 60vh;
+        height: 400px;
         min-height: 400px;
     }
 
     .controls-panel {
+        height: auto;
         border-left: none;
         border-top: 1px solid rgba(68, 23, 116, 0.1);
-        max-height: 40vh;
-        overflow-y: auto;
     }
 }
 
 @media (max-width: 768px) {
     .editor-container {
         margin: 1rem 0;
-        max-height: none;
     }
 
     .preview-panel {
-        height: 50vh;
-        min-height: 300px;
+        height: 350px;
+        min-height: 350px;
     }
     
     .preview-panel, .controls-panel {
