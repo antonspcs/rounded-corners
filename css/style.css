@@ -1,0 +1,183 @@
+/* Modern styles for Image Corner Editor */
+
+:root {
+    --primary-color: #6431ac;
+    --secondary-color: #f5f4f0;
+    --accent-color: #8957c4;
+    --text-color: #333;
+    --border-radius: 10px;
+}
+
+body {
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+/* Content boxes */
+.content-box {
+    background-color: var(--secondary-color);
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* Drop area */
+#drop-area {
+    border: 2px dashed #ccc;
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    background-color: white;
+}
+
+#drop-area.highlight {
+    border-color: var(--accent-color);
+    background-color: rgba(137, 87, 196, 0.1);
+}
+
+/* Image containers */
+.result-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem;
+}
+
+.result-image-container {
+    background: white;
+    padding: 0.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.result-image-container:hover {
+    transform: translateY(-5px);
+}
+
+.result-image {
+    width: 100%;
+    height: auto;
+    border-radius: calc(var(--border-radius) - 5px);
+    object-fit: contain;
+}
+
+/* Controls */
+.image-controls {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    justify-content: center;
+}
+
+/* Modal */
+.modal {
+    background-color: rgba(0,0,0,0.9);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background: none;
+    border: none;
+}
+
+/* Animations */
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+.fade-out {
+    animation: fadeOut 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(20px); }
+}
+
+/* Custom file input */
+.custom-file-upload {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    background-color: var(--accent-color);
+    color: white;
+    border-radius: var(--border-radius);
+    transition: background-color 0.3s ease;
+}
+
+.custom-file-upload:hover {
+    background-color: var(--primary-color);
+}
+
+/* Slider styling */
+.slider-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+input[type="range"] {
+    flex-grow: 1;
+    height: 6px;
+    background: #ddd;
+    border-radius: 3px;
+    appearance: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    background: var(--accent-color);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+    background: var(--primary-color);
+}
+
+/* Effects controls */
+.effects-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.effect-control {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* Preview area */
+#cropperContainer {
+    max-width: 100%;
+    margin: 1rem 0;
+    background: white;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .content-box {
+        padding: 1rem;
+    }
+    
+    .result-container {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+} 
