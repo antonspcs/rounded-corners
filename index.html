@@ -1,12 +1,133 @@
-<!DOCTYPE html><html lang="en"><head>    <meta charset="UTF-8">    <meta name="viewport" content="width=device-width, initial-scale=1.0">    <title>Image Corner Editor</title>    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>    <link rel="stylesheet" href="css/style.css">
-    
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Corner Editor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-        <div class="container mt-5">        <div class="content-box">            <h1 class="text-center mb-4">Image Corner Editor</h1>            <div class="row justify-content-center">                <div class="col-md-10">                    <form id="uploadForm" class="mb-4">                        <div id="drop-area" class="mb-4">                            <p class="mb-3">Drop your image here or click to select</p>                            <input type="file" id="imageInput" accept="image/*" required style="display: none;">                            <label for="imageInput" class="custom-file-upload">                                <i class="fas fa-cloud-upload-alt me-2"></i> Choose Image                            </label>                        </div>                        <div id="cropperContainer" class="mb-4" style="display: none;">                            <img id="cropperImage" src="" alt="Image to crop">                        </div>                        <div class="row">                            <div class="col-md-6 mb-3">                                <label for="presetSize" class="form-label">Preset Sizes:</label>                                <select id="presetSize" class="form-select">                                    <option value="">Custom Size</option>                                    <option value="Instagram Square">Instagram Square (1080×1080)</option>                                    <option value="Instagram Story">Instagram Story (1080×1920)</option>                                    <option value="Facebook Post">Facebook Post (1200×630)</option>                                    <option value="Twitter Post">Twitter Post (1200×675)</option>                                    <option value="LinkedIn Post">LinkedIn Post (1200×627)</option>                                    <option value="YouTube Thumbnail">YouTube Thumbnail (1280×720)</option>                                </select>                            </div>                            <div class="col-md-6 mb-3">                                <label for="cornerStyle" class="form-label">Corner Style:</label>                                <select id="cornerStyle" class="form-select">                                    <option value="rounded">Rounded</option>                                    <option value="beveled">Beveled</option>                                    <option value="scalloped">Scalloped</option>                                </select>                            </div>                        </div>                        <div id="customDimensions" class="row mb-3">                            <div class="col-md-6">                                <label for="width" class="form-label">Width:</label>                                <input type="number" id="width" name="width" value="1080" min="1" required class="form-control">                            </div>                            <div class="col-md-6">                                <label for="height" class="form-label">Height:</label>                                <input type="number" id="height" name="height" value="1080" min="1" required class="form-control">                            </div>                        </div>                        <div class="mb-4">                            <label class="form-label d-block">Corner Radius:</label>                            <div class="slider-container">                                <input type="range" class="form-range" id="radiusSlider" min="0" max="100" value="30">                                <input type="number" id="radius" name="radius" value="30" min="0" max="100" required class="form-control">                            </div>                        </div>                        <div class="effects-container mb-4">                            <div class="effect-control">                                <label for="brightness" class="form-label">Brightness:</label>                                <input type="range" class="form-range effect-control" id="brightness" min="-100" max="100" value="0">                            </div>                            <div class="effect-control">                                <label for="contrast" class="form-label">Contrast:</label>                                <input type="range" class="form-range effect-control" id="contrast" min="-100" max="100" value="0">                            </div>                            <div class="effect-control">                                <label for="saturation" class="form-label">Saturation:</label>                                <input type="range" class="form-range effect-control" id="saturation" min="-100" max="100" value="0">                            </div>                        </div>                        <div class="row mb-4">                            <div class="col-md-6">                                <label for="format" class="form-label">Output Format:</label>                                <select id="format" class="form-select">                                    <option value="image/png">PNG</option>                                    <option value="image/jpeg">JPEG</option>                                    <option value="image/webp">WebP</option>                                </select>                            </div>                            <div class="col-md-6 d-flex align-items-end">                                <button type="button" id="resetSettings" class="btn btn-outline-secondary me-2">                                    <i class="fas fa-undo"></i> Reset                                </button>                                <button type="button" id="processBtn" class="btn btn-primary flex-grow-1" disabled>                                    <i class="fas fa-magic me-2"></i> Process Image                                </button>                            </div>                        </div>                    </form>                </div>            </div>        </div>                <div class="content-box">            <div class="d-flex justify-content-between align-items-center mb-4">                <h2 class="mb-0">Gallery</h2>                <button id="clearGallery" class="btn btn-outline-danger">                    <i class="fas fa-trash-alt me-2"></i> Clear All                </button>            </div>            <div id="results" class="result-container"></div>        </div>    </div>
+    <div class="container-fluid py-4">
+        <!-- Main Editor Section -->
+        <div class="editor-container">
+            <div class="editor-layout">
+                <!-- Left Side - Image Preview -->
+                <div class="preview-panel">
+                    <div id="drop-area" class="mb-4">
+                        <p class="mb-3">Drop your image here or click to select</p>
+                        <input type="file" id="imageInput" accept="image/*" required style="display: none;">
+                        <label for="imageInput" class="custom-file-upload">
+                            <i class="fas fa-cloud-upload-alt me-2"></i> Choose Image
+                        </label>
+                    </div>
+                    <div id="cropperContainer" style="display: none;">
+                        <img id="cropperImage" src="" alt="Image to crop">
+                    </div>
+                </div>
 
-        <!-- Image Modal -->    <div id="imageModal" class="modal">        <span class="close">&times;</span>        <button id="prevImage" class="modal-nav-btn" style="left: 20px;">            <i class="fas fa-chevron-left"></i>        </button>        <button id="nextImage" class="modal-nav-btn" style="right: 20px;">            <i class="fas fa-chevron-right"></i>        </button>        <img class="modal-content" id="modalImage">    </div>    <!-- Scripts -->    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>    <script type="module" src="js/app.js"></script>
+                <!-- Right Side - Controls -->
+                <div class="controls-panel">
+                    <h1 class="app-title">Image Corner Editor</h1>
+                    
+                    <div class="control-group">
+                        <label for="presetSize" class="form-label">Preset</label>
+                        <select id="presetSize" class="form-select">
+                            <option value="">Custom Size</option>
+                            <option value="Square 600">Square (600×600)</option>
+                            <option value="Rectangle 600x265">Rectangle (600×265)</option>
+                            <option value="Instagram Square">Instagram Square (1080×1080)</option>
+                            <option value="Instagram Story">Instagram Story (1080×1920)</option>
+                            <option value="Facebook Post">Facebook Post (1200×630)</option>
+                            <option value="Twitter Post">Twitter Post (1200×675)</option>
+                            <option value="LinkedIn Post">LinkedIn Post (1200×627)</option>
+                            <option value="YouTube Thumbnail">YouTube Thumbnail (1280×720)</option>
+                        </select>
+                    </div>
 
-        
-            </body></html>
+                    <div class="control-group">
+                        <label for="width" class="form-label">Width</label>
+                        <input type="number" id="width" name="width" value="1080" min="1" required class="form-control">
+                    </div>
+
+                    <div class="control-group">
+                        <label for="height" class="form-label">Height</label>
+                        <input type="number" id="height" name="height" value="1080" min="1" required class="form-control">
+                    </div>
+
+                    <div class="control-group">
+                        <label class="form-label">Radius</label>
+                        <div class="slider-container">
+                            <input type="range" class="form-range" id="radiusSlider" min="0" max="100" value="30">
+                            <input type="number" id="radius" name="radius" value="30" min="0" max="100" required class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="cornerStyle" class="form-label">Corner Style</label>
+                        <select id="cornerStyle" class="form-select">
+                            <option value="rounded">Rounded</option>
+                            <option value="beveled">Beveled</option>
+                            <option value="scalloped">Scalloped</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="format" class="form-label">Output</label>
+                        <select id="format" class="form-select">
+                            <option value="image/png">PNG</option>
+                            <option value="image/jpeg">JPEG</option>
+                            <option value="image/webp">WebP</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group button-group">
+                        <button type="button" id="resetSettings" class="btn btn-outline-secondary">
+                            <i class="fas fa-undo"></i> Reset
+                        </button>
+                        <button type="button" id="processBtn" class="btn btn-primary" disabled>
+                            Process
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gallery Section -->
+        <div class="gallery-section mt-4">
+            <div class="gallery-header">
+                <h2>Gallery</h2>
+                <button id="clearGallery" class="btn btn-outline-danger">
+                    <i class="fas fa-trash-alt me-2"></i> Clear All
+                </button>
+            </div>
+            <div id="results" class="result-container"></div>
+        </div>
+    </div>
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="modal">
+        <span class="close">&times;</span>
+        <button id="prevImage" class="modal-nav-btn" style="left: 20px;">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button id="nextImage" class="modal-nav-btn" style="right: 20px;">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+        <img class="modal-content" id="modalImage">
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
 
         

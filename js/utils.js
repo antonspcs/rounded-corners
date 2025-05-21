@@ -25,11 +25,6 @@ export function processImage(img, width, height, options) {
     ctx.clip();
     ctx.drawImage(img, 0, 0, width, height);
 
-    // Apply any additional effects
-    if (options.effects) {
-        applyEffects(ctx, options.effects);
-    }
-
     return canvas.toDataURL(options.format || 'image/png');
 }
 
@@ -77,19 +72,6 @@ function drawScallopedCorners(ctx, width, height, radius) {
     ctx.closePath();
 }
 
-// Apply additional effects to the image
-function applyEffects(ctx, effects) {
-    if (effects.brightness) {
-        applyBrightness(ctx, effects.brightness);
-    }
-    if (effects.contrast) {
-        applyContrast(ctx, effects.contrast);
-    }
-    if (effects.saturation) {
-        applySaturation(ctx, effects.saturation);
-    }
-}
-
 // Get common social media image sizes
 export const socialMediaPresets = {
     'Instagram Square': { width: 1080, height: 1080 },
@@ -97,7 +79,9 @@ export const socialMediaPresets = {
     'Facebook Post': { width: 1200, height: 630 },
     'Twitter Post': { width: 1200, height: 675 },
     'LinkedIn Post': { width: 1200, height: 627 },
-    'YouTube Thumbnail': { width: 1280, height: 720 }
+    'YouTube Thumbnail': { width: 1280, height: 720 },
+    'Square 600': { width: 600, height: 600 },
+    'Rectangle 600x265': { width: 600, height: 265 }
 };
 
 // Format file size

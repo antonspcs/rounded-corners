@@ -32,11 +32,6 @@ export class ImageEditor {
                 }
             }
         });
-
-        // Effects controls
-        document.querySelectorAll('.effect-control').forEach(control => {
-            control.addEventListener('input', () => this.updatePreview());
-        });
     }
 
     // Initialize cropper
@@ -52,22 +47,23 @@ export class ImageEditor {
         const width = parseInt(document.getElementById('width').value);
         const height = parseInt(document.getElementById('height').value);
 
-                this.cropper = new Cropper(cropperImage, {            aspectRatio: width / height,            viewMode: 2,            responsive: true,            restore: true,            checkCrossOrigin: false,            autoCropArea: 0.8,            ready: () => {                document.getElementById('processBtn').disabled = false;                this.updatePreview();            }
+        this.cropper = new Cropper(cropperImage, {
+            aspectRatio: width / height,
+            viewMode: 2,
+            responsive: true,
+            restore: true,
+            checkCrossOrigin: false,
+            autoCropArea: 0.8,
+            ready: () => {
+                document.getElementById('processBtn').disabled = false;
+                this.updatePreview();
+            }
         });
     }
 
     // Get current radius value
     getRadius() {
         return parseInt(document.getElementById('radiusSlider').value);
-    }
-
-    // Get current effects settings
-    getEffects() {
-        return {
-            brightness: parseFloat(document.getElementById('brightness').value),
-            contrast: parseFloat(document.getElementById('contrast').value),
-            saturation: parseFloat(document.getElementById('saturation').value)
-        };
     }
 
     // Process the image with current settings
@@ -85,7 +81,6 @@ export class ImageEditor {
         const options = {
             cornerStyle: document.getElementById('cornerStyle').value,
             radius: this.getRadius(),
-            effects: this.getEffects(),
             format: document.getElementById('format').value
         };
 
@@ -112,7 +107,6 @@ export class ImageEditor {
             },
             cornerStyle: document.getElementById('cornerStyle').value,
             radius: this.getRadius(),
-            effects: this.getEffects(),
             format: document.getElementById('format').value
         };
     }
@@ -122,9 +116,6 @@ export class ImageEditor {
         document.getElementById('radiusSlider').value = 30;
         document.getElementById('radius').value = 30;
         document.getElementById('cornerStyle').value = 'rounded';
-        document.getElementById('brightness').value = 0;
-        document.getElementById('contrast').value = 0;
-        document.getElementById('saturation').value = 0;
         document.getElementById('format').value = 'image/png';
         this.updatePreview();
     }
