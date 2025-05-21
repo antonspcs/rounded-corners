@@ -52,13 +52,7 @@ export class ImageEditor {
         const width = parseInt(document.getElementById('width').value);
         const height = parseInt(document.getElementById('height').value);
 
-        this.cropper = new Cropper(cropperImage, {
-            aspectRatio: width / height,
-            viewMode: 1,
-            ready: () => {
-                document.getElementById('processBtn').disabled = false;
-                this.updatePreview();
-            }
+                this.cropper = new Cropper(cropperImage, {            aspectRatio: width / height,            viewMode: 2,            responsive: true,            restore: true,            checkCrossOrigin: false,            autoCropArea: 0.8,            ready: () => {                document.getElementById('processBtn').disabled = false;                this.updatePreview();            }
         });
     }
 
