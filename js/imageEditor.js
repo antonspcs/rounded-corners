@@ -49,11 +49,12 @@ export class ImageEditor {
 
         this.cropper = new Cropper(cropperImage, {
             aspectRatio: width / height,
-            viewMode: 2,
+            viewMode: 1,
             responsive: true,
             restore: true,
             checkCrossOrigin: false,
-            autoCropArea: 0.8,
+            autoCropArea: 1,
+            background: false,
             ready: () => {
                 document.getElementById('processBtn').disabled = false;
                 this.updatePreview();
@@ -90,10 +91,13 @@ export class ImageEditor {
     // Update preview image
     updatePreview() {
         const preview = document.getElementById('previewImage');
-        if (preview && this.cropper) {
+        if (!preview) return;
+        
+        if (this.cropper) {
             const processed = this.processImage();
             if (processed) {
                 preview.src = processed;
+                preview.style.display = 'block';
             }
         }
     }
